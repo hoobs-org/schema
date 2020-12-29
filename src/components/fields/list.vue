@@ -1,0 +1,133 @@
+<!-------------------------------------------------------------------------------------------------
+ | hoobs-gui                                                                                      |
+ | Copyright (C) 2020 HOOBS                                                                       |
+ |                                                                                                |
+ | This program is free software: you can redistribute it and/or modify                           |
+ | it under the terms of the GNU General Public License as published by                           |
+ | the Free Software Foundation, either version 3 of the License, or                              |
+ | (at your option) any later version.                                                            |
+ |                                                                                                |
+ | This program is distributed in the hope that it will be useful,                                |
+ | but WITHOUT ANY WARRANTY; without even the implied warranty of                                 |
+ | MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the                                  |
+ | GNU General Public License for more details.                                                   |
+ |                                                                                                |
+ | You should have received a copy of the GNU General Public License                              |
+ | along with this program.  If not, see <http://www.gnu.org/licenses/>.                          |
+ -------------------------------------------------------------------------------------------------->
+
+<template>
+    <fieldset id="field">
+        <legend v-if="schema.title" :class="schema.description && schema.description !== '' ? 'legend collapsed' : 'legend'">{{ schema.title }}</legend>
+        <div v-if="schema.description && schema.description !== ''" class="description">{{ schema.description }}</div>
+        <div v-for="(item, index) in items" class="item" :key="index">
+            <div class="field">
+                <schema  :title="schema.title" :description="schema.description" :placeholder="schema.example" :schema="schema.items" :value="item" v-on:input="updateValue($event, index)" />
+            </div>
+            <div class="action">
+                <div class="icon" v-if="items.length > 0" v-on:click="items.splice(index, 1)" :key="`remove-${index}`">delete</div>
+            </div>
+        </div>
+        <div class="icon add" v-on:click="addItem()">add_circle</div>
+    </fieldset>
+</template>
+
+<script>
+    import { scaffold } from "../../services/schema";
+
+    export default {
+        name: "list-field",
+
+        components: {
+            "schema": () => import("@/components/elements/schema.vue"),
+        },
+
+        props: [
+            "schema",
+            "value",
+        ],
+
+        data() {
+            return {
+                items: (this.value !== undefined) ? this.value : scaffold(this.schema),
+            };
+        },
+
+        methods: {
+            addItem() {
+                this.items.push(scaffold(this.schema)[0]);
+            },
+
+            updateValue(value, index) {
+                this.items.splice(index, 1, value);
+
+                this.$emit("input", this.items);
+                this.$emit("change", this.items);
+            },
+        },
+    };
+</script>
+
+<style scoped>
+    #field {
+        flex: 1;
+        padding: 0 10px 10px 10px;
+        border: none;
+        border-left: 4px #dfdfdf solid;
+    }
+
+    #field .legend {
+        color: #feb400;
+        margin: 0 0 20px 0;
+        font-size: 14px;
+        overflow: hidden;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+    }
+
+    #field .legend.collapsed {
+        margin: 0;
+    }
+
+    #field .description {
+        font-size: 12px;
+        margin: 0 0 20px 0;
+        user-select: none;
+    }
+
+    #field .description:empty {
+        display: none;
+    }
+
+    #field .add {
+        cursor: pointer;
+        opacity: 0.7;
+    }
+
+    #field .add:hover {
+        opacity: 1;
+    }
+
+    #field .item {
+        display: flex;
+        flex-direction: row;
+        align-items: flex-start;
+    }
+
+    #field .item .field {
+        flex: 1;
+    }
+
+    #field .item .action {
+        height: 32px;
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        cursor: pointer;
+        opacity: 0.7;
+    }
+
+    #field .item .action:hover {
+        opacity: 1;
+    }
+</style>
