@@ -49,7 +49,17 @@
 
         data() {
             return {
-                value: {},
+                value: {
+                    "static": "Static",
+                    "select": "One",
+                    "oneof": "Two",
+                    "anyof": [
+                        "Three"
+                    ],
+                    "list": [
+                        "Item One"
+                    ]
+                },
                 working: "",
                 error: null,
                 schema: {
@@ -83,19 +93,19 @@
                                 {
                                     "title": "One",
                                     "enum": [
-                                        "one"
+                                        "One"
                                     ]
                                 },
                                 {
                                     "title": "Two",
                                     "enum": [
-                                        "two"
+                                        "Two"
                                     ]
                                 },
                                 {
                                     "title": "Three",
                                     "enum": [
-                                        "three"
+                                        "Three"
                                     ]
                                 }
                             ]
@@ -132,26 +142,26 @@
                                     {
                                         "title": "One",
                                         "enum": [
-                                            "one"
+                                            "One"
                                         ]
                                     },
                                     {
                                         "title": "Two",
                                         "enum": [
-                                            "two"
+                                            "Two"
                                         ]
                                     },
                                     {
                                         "title": "Three",
                                         "enum": [
-                                            "three"
+                                            "Three"
                                         ]
                                     }
                                 ]
                             }
                         },
                         "list": {
-                            "title": "List Fiels",
+                            "title": "List Field",
                             "type": "array",
                             "description": "This is a demo list field",
                             "items": {
