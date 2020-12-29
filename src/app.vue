@@ -160,6 +160,58 @@
                                 ]
                             }
                         },
+                        "form": {
+                            "title": "Form Field",
+                            "description": "This is a demo form field",
+                            "type": "object",
+                            "properties": {
+                                "text": {
+                                    "title": "Text Sub-Field",
+                                    "type": "string",
+                                    "description": "This is a demo of a text field inside a form field",
+                                    "placeholder": "Placeholder"
+                                },
+                                "boolean": {
+                                    "title": "Boolean Sub-Field",
+                                    "type": "boolean"
+                                },
+                                "select": {
+                                    "title": "Select Sub-Field",
+                                    "type": "string",
+                                    "description": "This is a demo of a select field inside a form field",
+                                    "enum": [
+                                        "One",
+                                        "Two",
+                                        "Three"
+                                    ]
+                                },
+                                "oneof": {
+                                    "title": "One Of Sub-Field",
+                                    "type": "string",
+                                    "description": "This is a demo one of field inside a form field",
+                                    "oneOf": [
+                                        {
+                                            "title": "One",
+                                            "enum": [
+                                                "One"
+                                            ]
+                                        },
+                                        {
+                                            "title": "Two",
+                                            "enum": [
+                                                "Two"
+                                            ]
+                                        },
+                                        {
+                                            "title": "Three",
+                                            "enum": [
+                                                "Three"
+                                            ]
+                                        }
+                                    ]
+                                }
+                            }
+                        },
                         "list": {
                             "title": "List Field",
                             "type": "array",
