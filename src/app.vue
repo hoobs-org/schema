@@ -28,7 +28,7 @@
                 <pre v-html="JSON.stringify(value, null, 4)"></pre>
             </div>
             <div v-if="!error" class="form">
-                <schema-form :schema="schema" v-model="value" style="max-width: 800px;" />
+                <schema-form :schema="schema" v-model="value" class="output" />
             </div>
             <div v-else class="error">
                 {{ error.message }}
@@ -49,179 +49,46 @@
 
         data() {
             return {
-                value: {
-                    "static": "Static",
-                    "select": "One",
-                    "oneof": "Two",
-                    "anyof": [
-                        "Three"
-                    ],
-                    "list": [
-                        "Item One"
-                    ]
-                },
+                value: {},
                 working: "",
                 error: null,
                 schema: {
                     "type": "object",
                     "properties": {
-                        "text": {
-                            "title": "Text Field",
-                            "type": "string",
-                            "description": "This is a demo of a text field",
-                            "placeholder": "Placeholder"
-                        },
-                        "boolean": {
-                            "title": "Boolean Field",
-                            "type": "boolean"
-                        },
-                        "select": {
-                            "title": "Select Field",
-                            "type": "string",
-                            "description": "This is a demo of a select field",
-                            "enum": [
-                                "One",
-                                "Two",
-                                "Three"
-                            ]
-                        },
-                        "oneof": {
-                            "title": "One Of Field",
-                            "type": "string",
-                            "description": "This is a demo one of field",
-                            "oneOf": [
-                                {
-                                    "title": "One",
-                                    "enum": [
-                                        "One"
-                                    ]
-                                },
-                                {
-                                    "title": "Two",
-                                    "enum": [
-                                        "Two"
-                                    ]
-                                },
-                                {
-                                    "title": "Three",
-                                    "enum": [
-                                        "Three"
-                                    ]
-                                }
-                            ]
-                        },
-                        "integer": {
-                            "title": "Integer Field",
-                            "type": "integer",
-                            "minimum": 1,
-                            "maximum": 32,
-                            "description": "This is a demo interger field",
-                            "placeholder": "Placeholder"
-                        },
-                        "number": {
-                            "title": "Number Field",
-                            "type": "number",
-                            "minimum": 1,
-                            "maximum": 32,
-                            "description": "This is a demo number field",
-                            "placeholder": "Placeholder"
-                        },
-                        "date": {
-                            "title": "Date Field",
-                            "type": "string",
-                            "format": "date",
-                            "description": "This is a demo date field"
-                        },
-                        "anyof": {
-                            "title": "Any Of Field",
-                            "description": "This is a demo any of field",
+                        "accessories": {
                             "type": "array",
+                            "format": "root",
                             "items": {
-                                "type": "string",
-                                "anyOf": [
-                                    {
-                                        "title": "One",
-                                        "enum": [
-                                            "One"
-                                        ]
+                                "title": "Accessory",
+                                "type": "object",
+                                "properties": {
+                                    "name": {
+                                        "title": "Name",
+                                        "type": "string",
+                                        "required": true
                                     },
-                                    {
-                                        "title": "Two",
-                                        "enum": [
-                                            "Two"
-                                        ]
+                                    "stateful": {
+                                        "title": "Stateful",
+                                        "type": "boolean",
+                                        "default": false,
+                                        "description": "The switch remains on instead of being automatically turned off."
                                     },
-                                    {
-                                        "title": "Three",
-                                        "enum": [
-                                            "Three"
-                                        ]
+                                    "reverse": {
+                                        "title": "Reverse",
+                                        "type": "boolean",
+                                        "default": false,
+                                        "description": "The switch's default state is on."
+                                    },
+                                    "time": {
+                                        "title": "Time",
+                                        "type": "number",
+                                        "default": 1000,
+                                        "description": "The switch will turn off after this number of milliseconds. Not used if the switch is stateful."
                                     }
-                                ]
-                            }
-                        },
-                        "form": {
-                            "title": "Form Field",
-                            "description": "This is a demo form field",
-                            "type": "object",
-                            "properties": {
-                                "text": {
-                                    "title": "Text Sub-Field",
-                                    "type": "string",
-                                    "description": "This is a demo of a text field inside a form field",
-                                    "placeholder": "Placeholder"
-                                },
-                                "boolean": {
-                                    "title": "Boolean Sub-Field",
-                                    "type": "boolean"
-                                },
-                                "select": {
-                                    "title": "Select Sub-Field",
-                                    "type": "string",
-                                    "description": "This is a demo of a select field inside a form field",
-                                    "enum": [
-                                        "One",
-                                        "Two",
-                                        "Three"
-                                    ]
-                                },
-                                "oneof": {
-                                    "title": "One Of Sub-Field",
-                                    "type": "string",
-                                    "description": "This is a demo one of field inside a form field",
-                                    "oneOf": [
-                                        {
-                                            "title": "One",
-                                            "enum": [
-                                                "One"
-                                            ]
-                                        },
-                                        {
-                                            "title": "Two",
-                                            "enum": [
-                                                "Two"
-                                            ]
-                                        },
-                                        {
-                                            "title": "Three",
-                                            "enum": [
-                                                "Three"
-                                            ]
-                                        }
-                                    ]
                                 }
-                            }
-                        },
-                        "list": {
-                            "title": "List Field",
-                            "type": "array",
-                            "description": "This is a demo list field",
-                            "items": {
-                                "type": "string"
                             }
                         }
-                    },
-                    "required": ["refreshToken"]
+                    }
                 },
             }
         },
@@ -451,6 +318,10 @@
 
     #app .screen .form::-webkit-scrollbar {
         display: none;
+    }
+
+    #app .screen .form .output {
+        max-width: 800px;
     }
 
     #app .screen .error {

@@ -18,16 +18,25 @@
 
 <template>
     <fieldset id="field">
-        <legend v-if="title && title !== ''" class="legend">{{ title }}</legend>
+        <legend v-if="title && title !== ''" :class="schema.description && schema.description !== '' ? 'legend collapsed' : 'legend'">{{ title }}</legend>
         <div v-if="schema.description && schema.description !== ''" class="description">{{ schema.description }}</div>
-        <schema v-for="(child, key) in schema.properties" :schema="child" :value="internalValue[key]" :key="key" @input="updateValue($event, key)" />
+        <div v-for="(item, index) in items" class="item" :key="index">
+            <div class="field">
+                <schema  :title="schema.title" :description="schema.description" :placeholder="schema.example" :schema="schema.items" :value="item" v-on:input="updateValue($event, index)" />
+            </div>
+            <div class="action">
+                <div class="icon" v-if="items.length > 0" v-on:click="removeItem(index)" :key="`remove-${index}`">delete</div>
+            </div>
+        </div>
+        <div class="icon add" v-on:click="addItem()">add_circle</div>
     </fieldset>
 </template>
 
 <script>
+    import { scaffold } from "../../services/schema";
 
     export default {
-        name: "form-field",
+        name: "root-field",
 
         components: {
             "schema": () => import("@/components/elements/schema.vue"),
@@ -41,20 +50,27 @@
 
         data() {
             return {
-                internalValue: (this.value !== undefined) ? this.value : {},
+                items: (this.value !== undefined) ? this.value : scaffold(this.schema),
             };
         },
 
-        watch: {
-            value(value) {
-                this.internalValue = value;
-            },
-        },
-
         methods: {
-            updateValue(value, child) {
-                this.internalValue[child] = value;
-                this.$emit("input", this.internalValue);
+            addItem() {
+                this.items.push(scaffold(this.schema)[0]);
+            },
+
+            removeItem(index) {
+                this.items.splice(index, 1);
+
+                this.$emit("input", this.items);
+                this.$emit("change", this.items);
+            },
+
+            updateValue(value, index) {
+                this.items.splice(index, 1, value);
+
+                this.$emit("input", this.items);
+                this.$emit("change", this.items);
             },
         },
     };
@@ -65,11 +81,11 @@
         flex: 1;
         padding: 0 10px 10px 10px;
         border: none;
-        border-left: 4px #dfdfdf solid;
     }
 
     #field .legend {
         color: #feb400;
+        margin: 0 0 20px 0;
         font-size: 14px;
         overflow: hidden;
         white-space: nowrap;
@@ -84,5 +100,40 @@
 
     #field .description:empty {
         display: none;
+    }
+
+    #field .add {
+        cursor: pointer;
+        margin: 0 0 0 -7px;
+        opacity: 0.7;
+    }
+
+    #field .add:hover {
+        opacity: 1;
+    }
+
+    #field .item {
+        display: flex;
+        flex-direction: row;
+        align-items: flex-end;
+        margin: 0 0 20px 0;
+    }
+
+    #field .item .field {
+        flex: 1;
+    }
+
+    #field .item .action {
+        height: 32px;
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        margin: 0 0 30px 0;
+        cursor: pointer;
+        opacity: 0.7;
+    }
+
+    #field .item .action:hover {
+        opacity: 1;
     }
 </style>

@@ -93,10 +93,6 @@
         text-overflow: ellipsis;
     }
 
-    #field .legend.collapsed {
-        margin: 0;
-    }
-
     #field .description {
         font-size: 12px;
         margin: 0 0 20px 0;
@@ -119,7 +115,7 @@
     #field .item {
         display: flex;
         flex-direction: row;
-        align-items: flex-start;
+        align-items: flex-end;
     }
 
     #field .item .field {
@@ -131,6 +127,7 @@
         display: flex;
         flex-direction: row;
         align-items: center;
+        margin: 0 0 20px 0;
         cursor: pointer;
         opacity: 0.7;
     }
