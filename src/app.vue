@@ -49,7 +49,15 @@
 
         data() {
             return {
-                value: {},
+                value: {
+                    "accessories": [
+                        {
+                            "name": "test",
+                            "stateful": true,
+                            "reverse": true
+                        }
+                    ]
+                },
                 working: "",
                 error: null,
                 schema: {
