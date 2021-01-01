@@ -28,7 +28,7 @@
                 <pre v-html="JSON.stringify(value, null, 4)"></pre>
             </div>
             <div v-if="!error" class="form">
-                <schema-form :schema="schema" v-model="value" class="output" />
+                <schema-form instance="instance" identifier="identifier" :schema="schema" v-model="value" class="output" />
             </div>
             <div v-else class="error">
                 {{ error.message }}
@@ -70,6 +70,11 @@
                                 "title": "Accessory",
                                 "type": "object",
                                 "properties": {
+                                    "button": {
+                                        "title": "Link Account",
+                                        "widget": "button",
+                                        "action": "dialog"
+                                    },
                                     "name": {
                                         "title": "Name",
                                         "type": "string",

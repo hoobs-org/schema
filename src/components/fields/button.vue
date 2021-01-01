@@ -17,21 +17,17 @@
  -------------------------------------------------------------------------------------------------->
 
 <template>
-    <fieldset id="field">
-        <legend v-if="title && title !== ''" class="legend">{{ title }}</legend>
-        <div v-if="schema.description && schema.description !== ''" class="description">{{ schema.description }}</div>
-        <schema v-for="(child, key) in schema.properties" :instance="instance" :identifier="identifier" :schema="child" :value="internalValue[key]" :key="key" @input="updateValue($event, key)" />
-    </fieldset>
+    <div id="field">
+        <span v-if="schema.description && schema.description !== ''" class="description">{{ schema.description }}</span>
+        <div class="action">
+            <div class="button primary" v-on:click="action">{{ schema.title || "Undefined" }}</div>
+        </div>
+    </div>
 </template>
 
 <script>
-
     export default {
-        name: "form-field",
-
-        components: {
-            "schema": () => import("@/components/elements/schema.vue"),
-        },
+        name: "button-field",
 
         props: {
             schema: Object,
@@ -43,20 +39,21 @@
 
         data() {
             return {
-                internalValue: (this.value !== undefined) ? this.value : {},
+                action: (typeof this[this.schema.action || "dialog"] === "function") ? this[this.schema.action || "dialog"] : () => { /* null */ },
             };
         },
 
-        watch: {
-            value(value) {
-                this.internalValue = value;
-            },
-        },
-
         methods: {
-            updateValue(value, child) {
-                this.internalValue[child] = value;
-                this.$emit("input", this.internalValue);
+            dialog() {
+                console.log("dialog");
+                console.log(`identifier: ${this.identifier}`);
+                console.log(`instance: ${this.instance}`);
+            },
+
+            popup() {
+                console.log("popup");
+                console.log(`identifier: ${this.identifier}`);
+                console.log(`instance: ${this.instance}`);
             },
         },
     };
@@ -64,27 +61,22 @@
 
 <style scoped>
     #field {
-        flex: 1;
-        padding: 0 10px 10px 10px;
-        border: none;
-        border-left: 4px #dfdfdf solid;
-    }
-
-    #field .legend {
-        color: #feb400;
-        font-size: 14px;
-        overflow: hidden;
-        white-space: nowrap;
-        text-overflow: ellipsis;
+        display: flex;
+        flex-direction: column;
+        padding: 0 10px 10px 0;
     }
 
     #field .description {
         font-size: 12px;
-        margin: 0 0 20px 0;
+        margin: -7px 0 7px 0;
         user-select: none;
     }
 
     #field .description:empty {
         display: none;
+    }
+
+    #field .action {
+        padding: 0;
     }
 </style>
