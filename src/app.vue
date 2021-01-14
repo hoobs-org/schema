@@ -49,60 +49,10 @@
 
         data() {
             return {
-                value: {
-                    "accessories": [
-                        {
-                            "name": "test",
-                            "stateful": true,
-                            "reverse": true
-                        }
-                    ]
-                },
+                value: {},
                 working: "",
                 error: null,
-                schema: {
-                    "type": "object",
-                    "properties": {
-                        "accessories": {
-                            "type": "array",
-                            "format": "root",
-                            "items": {
-                                "title": "Accessory",
-                                "type": "object",
-                                "properties": {
-                                    "button": {
-                                        "title": "Link Account",
-                                        "widget": "button",
-                                        "action": "dialog"
-                                    },
-                                    "name": {
-                                        "title": "Name",
-                                        "type": "string",
-                                        "required": true
-                                    },
-                                    "stateful": {
-                                        "title": "Stateful",
-                                        "type": "boolean",
-                                        "default": false,
-                                        "description": "The switch remains on instead of being automatically turned off."
-                                    },
-                                    "reverse": {
-                                        "title": "Reverse",
-                                        "type": "boolean",
-                                        "default": false,
-                                        "description": "The switch's default state is on."
-                                    },
-                                    "time": {
-                                        "title": "Time",
-                                        "type": "number",
-                                        "default": 1000,
-                                        "description": "The switch will turn off after this number of milliseconds. Not used if the switch is stateful."
-                                    }
-                                }
-                            }
-                        }
-                    }
-                },
+                schema: {},
             }
         },
 
@@ -112,12 +62,41 @@
 
         methods: {
             update() {
+                let working = {};
+
+                this.schema = {};
+
                 try {
-                    this.schema = JSON.parse(this.working);
+                    working = JSON.parse(this.working);
                     this.error = null;
                 } catch (error) {
-                    this.schema = {};
                     this.error = error;
+                }
+
+                if (working.results) working = working.results;
+
+                if (!this.error) {
+                    if ((working.pluginType || "").toLowerCase() === "accessory" || working.accessory) {
+                        this.schema = {
+                            type: "object",
+                            properties: {
+                                accessories: {
+                                    type: "array",
+                                    format: "root",
+                                    items: {
+                                        title: "Accessory",
+                                        type: "object",
+                                        properties: (working.config || working.schema).properties || (working.config || working.schema),
+                                    },
+                                },
+                            },
+                        };
+                    } else {
+                        this.schema = {
+                            type: "object",
+                            properties: (working.config || working.schema).properties || (working.config || working.schema),
+                        };
+                    }
                 }
             },
         },
