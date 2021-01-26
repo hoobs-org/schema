@@ -18,8 +18,8 @@
 
 <template>
     <fieldset id="field">
-        <legend v-if="title && title !== ''" :class="schema.description && schema.description !== '' ? 'legend collapsed' : 'legend'">{{ title }}</legend>
-        <div v-if="schema.description && schema.description !== ''" class="description">{{ schema.description }}</div>
+        <legend v-if="title && title !== ''" :class="schema.description && schema.description !== '' ? 'legend collapsed' : 'legend'" v-html="title"></legend>
+        <div v-if="schema.description && schema.description !== ''" class="description" v-html="schema.description"></div>
         <div v-for="(item, index) in items" class="item" :key="index">
             <div class="field">
                 <schema :instance="instance" :identifier="identifier" :title="schema.title" :description="schema.description" :placeholder="schema.example" :schema="schema.items" :value="item" v-on:input="updateValue($event, index)" />
@@ -52,7 +52,7 @@
 
         data() {
             return {
-                items: (this.value !== undefined) ? this.value : scaffold(this.schema),
+                items: (this.value !== undefined) ? this.value : [],
             };
         },
 
@@ -81,7 +81,7 @@
 <style scoped>
     #field {
         flex: 1;
-        padding: 0 10px 10px 10px;
+        padding: 0 0 10px 10px;
         border: none;
     }
 

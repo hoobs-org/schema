@@ -180,7 +180,7 @@
     #app .button {
         height: 40px;
         box-sizing: border-box;
-        background:  #f8f8f8;
+        background: #f8f8f8;
         color: #1a1a1a !important;
         text-decoration: none !important;
         display: inline-flex;

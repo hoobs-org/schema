@@ -9,6 +9,7 @@
             :max="schema.maximum"
             :instance="instance"
             :identifier="identifier"
+            :field="field"
             :schema="schema"
             :value="value"
             :checked="value"
@@ -25,6 +26,7 @@
         name: "schema",
 
         props: {
+            field: String,
             schema: Object,
             value: [Object, String, Number, Boolean, Array],
             instance: String,
@@ -39,6 +41,10 @@
             options() {
                 if (this.schema.enum !== undefined && Array.isArray(this.schema.enum)) {
                     return this.schema.enum.map((item) => ({ value: item, text: item }));
+                }
+
+                if (this.schema.oneOf !== undefined && Array.isArray(this.schema.oneOf)) {
+                    return this.schema.oneOf.map((item) => ({ value: item.enum[0], text: item.title }));
                 }
 
                 return [];
