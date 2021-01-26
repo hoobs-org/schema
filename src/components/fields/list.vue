@@ -24,7 +24,7 @@
         <div v-if="schema.description && schema.description !== ''" class="description" v-html="schema.description"></div>
         <div v-for="(item, index) in items" class="item" :key="index">
             <div class="field">
-                <schema :instance="instance" :identifier="identifier" :title="schema.title" :description="schema.description" :placeholder="schema.example" :schema="schema.items" :value="item" v-on:input="updateValue($event, index)" />
+                <schema :instance="instance" :identifier="identifier" :title="schema.title" :description="schema.description" :placeholder="schema.example" :field="index" :schema="schema.items" :value="item" v-on:input="updateValue($event, index)" />
             </div>
             <div class="action">
                 <div class="icon" v-if="items.length > 0" v-on:click="removeItem(index)" :key="`remove-${index}`">delete</div>
@@ -132,7 +132,7 @@
         display: flex;
         flex-direction: row;
         align-items: flex-end;
-        padding: 0 10px 10px 10px;
+        padding: 10px 10px 10px 30px;
         margin: 10px 0 0 0;
         border: 1px #dfdfdf solid;
     }

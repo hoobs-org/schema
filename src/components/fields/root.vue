@@ -17,19 +17,21 @@
  -------------------------------------------------------------------------------------------------->
 
 <template>
-    <fieldset id="field">
-        <legend v-if="title && title !== ''" :class="schema.description && schema.description !== '' ? 'legend collapsed' : 'legend'" v-html="title"></legend>
+    <div id="field">
+        <div class="position">
+            <legend v-if="title && title !== ''" :class="schema.description && schema.description !== '' ? 'legend collapsed' : 'legend'" v-html="title"></legend>
+        </div>
         <div v-if="schema.description && schema.description !== ''" class="description" v-html="schema.description"></div>
         <div v-for="(item, index) in items" class="item" :key="index">
             <div class="field">
-                <schema :instance="instance" :identifier="identifier" :title="schema.title" :description="schema.description" :placeholder="schema.example" :schema="schema.items" :value="item" v-on:input="updateValue($event, index)" />
+                <schema :instance="instance" :identifier="identifier" :title="schema.title" :description="schema.description" :placeholder="schema.example" :field="index" :schema="schema.items" :value="item" v-on:input="updateValue($event, index)" />
             </div>
             <div class="action">
                 <div class="icon" v-if="items.length > 0" v-on:click="removeItem(index)" :key="`remove-${index}`">delete</div>
             </div>
         </div>
         <div class="icon add" v-on:click="addItem()">add_circle</div>
-    </fieldset>
+    </div>
 </template>
 
 <script>
@@ -43,6 +45,7 @@
         },
 
         props: {
+            field: String,
             schema: Object,
             value: [Object, String, Number, Boolean, Array],
             title: String,
@@ -81,14 +84,20 @@
 <style scoped>
     #field {
         flex: 1;
-        padding: 0 0 10px 10px;
-        border: none;
+        padding: 0 10px 0 0;
+    }
+
+    #field .position {
+        margin: 0 0 7px 0;
+        user-select: none;
+        cursor: default;
     }
 
     #field .legend {
         color: #feb400;
-        margin: 0 0 20px 0;
+        padding: 0 0 7px 0;
         font-size: 14px;
+        border-bottom: 1px #dfdfdf solid;
         overflow: hidden;
         white-space: nowrap;
         text-overflow: ellipsis;
@@ -96,7 +105,7 @@
 
     #field .description {
         font-size: 12px;
-        margin: 0 0 20px 0;
+        margin: 0;
         user-select: none;
     }
 
@@ -106,7 +115,7 @@
 
     #field .add {
         cursor: pointer;
-        margin: 0 0 0 -7px;
+        margin: 10px 0 0 0;
         opacity: 0.7;
     }
 
@@ -118,7 +127,9 @@
         display: flex;
         flex-direction: row;
         align-items: flex-end;
-        margin: 0 0 20px 0;
+        padding: 10px 10px 10px 30px;
+        margin: 10px 0 0 0;
+        border: 1px #dfdfdf solid;
     }
 
     #field .item .field {
@@ -130,7 +141,7 @@
         display: flex;
         flex-direction: row;
         align-items: center;
-        margin: 0 0 30px 0;
+        margin: 0 0 0 0;
         cursor: pointer;
         opacity: 0.7;
     }

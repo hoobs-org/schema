@@ -86,7 +86,7 @@
                                     items: {
                                         title: "Accessory",
                                         type: "object",
-                                        properties: (working.config || working.schema).properties || (working.config || working.schema),
+                                        properties: working.properties || (working.config || working.schema).properties || (working.config || working.schema),
                                     },
                                 },
                             },
@@ -94,7 +94,7 @@
                     } else {
                         this.schema = {
                             type: "object",
-                            properties: (working.config || working.schema).properties || (working.config || working.schema),
+                            properties: working.properties || (working.config || working.schema).properties || (working.config || working.schema),
                         };
                     }
                 }
