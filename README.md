@@ -2,6 +2,8 @@
 
 This is a JSON schema validation and testing tool.
 
+![](https://github.com/hoobs-org/schema/raw/main/screenshot.png)
+
 ## Installing
 HOOBS recommends Yarn.
 
