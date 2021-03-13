@@ -33,3 +33,6 @@ Or using NPM.
 cd schema
 npm run serve
 ```
+
+## Legal
+HOOBS and the HOOBS logo are registered trademarks of HOOBS Inc. Copyright (C) 2020 HOOBS Inc. All rights reserved.
