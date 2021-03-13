@@ -4,6 +4,10 @@ This is a JSON schema validation and testing tool.
 
 ![](https://github.com/hoobs-org/schema/raw/main/screenshot.png)
 
+## Demo
+You can run this tool from here.
+[Live Demo](https://mkellsy.github.io/schema/)
+
 ## Installing
 HOOBS recommends Yarn.
 
