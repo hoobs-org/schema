@@ -26,7 +26,7 @@
         name: "schema",
 
         props: {
-            field: String,
+            field: [String, Number],
             schema: Object,
             value: [Object, String, Number, Boolean, Array],
             instance: String,

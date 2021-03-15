@@ -45,7 +45,7 @@
         },
 
         props: {
-            field: String,
+            field: [String, Number],
             schema: Object,
             value: [Object, String, Number, Boolean, Array],
             title: String,
@@ -158,7 +158,7 @@
         display: flex;
         flex-direction: row;
         align-items: center;
-        margin: 0 0 0 0;
+        margin: 0 0 17px 0;
         cursor: pointer;
         opacity: 0.7;
     }

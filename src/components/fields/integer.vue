@@ -54,7 +54,7 @@
             title: String,
             description: String,
             placeholder: {
-                type: String,
+                type: [Number, String],
                 default: "",
             },
             value: Number,

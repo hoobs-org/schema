@@ -19,26 +19,39 @@
 <template>
     <div id="field">
         <div class="position">
-            <legend v-if="title && title !== ''" :class="schema.description && schema.description !== '' ? 'legend collapsed' : 'legend'" v-html="title"></legend>
+            <legend v-if="label && label !== ''" :class="schema.description && schema.description !== '' ? 'legend collapsed' : 'legend'" v-html="label"></legend>
         </div>
         <div v-if="schema.description && schema.description !== ''" class="description" v-html="schema.description"></div>
         <div v-for="(item, index) in items" class="item" :key="index">
             <div class="field">
-                <schema :instance="instance" :identifier="identifier" :title="schema.title" :description="schema.description" :placeholder="schema.example" :field="index" :schema="schema.items" :value="item" v-on:input="updateValue($event, index)" />
+                <text-field
+                    :value="item.key"
+                    v-on:input="updateKey($event, index)"
+                />
+            </div>
+            <div class="field">
+                <component
+                    :is="type"
+                    :placeholder="schema.placeholder || schema.example"
+                    :min="schema.minimum"
+                    :max="schema.maximum"
+                    :value="item.value"
+                    v-on:input="updateValue($event, index)"
+                />
             </div>
             <div class="action">
                 <div class="icon" v-if="items.length > 0" v-on:click="removeItem(index)" :key="`remove-${index}`">delete</div>
             </div>
         </div>
-        <div class="icon add" v-on:click="addItem()">add_circle</div>
+        <div class="icon add" v-if="!schema.maxItems || items.length < schema.maxItems" v-on:click="addItem()">add_circle</div>
     </div>
 </template>
 
 <script>
-    import { scaffold } from "../../services/schema";
+    import { field, decamel, prune } from "../../services/schema";
 
     export default {
-        name: "root-field",
+        name: "keys-field",
 
         components: {
             "schema": () => import("@/components/elements/schema.vue"),
@@ -49,33 +62,57 @@
             schema: Object,
             value: [Object, String, Number, Boolean, Array],
             title: String,
-            instance: String,
             identifier: String,
+        },
+
+        computed: {
+            type() {
+                return field((Object.keys(this.schema.patternProperties)[0] !== undefined) ? this.schema.patternProperties[Object.keys(this.schema.patternProperties)[0]] : { type: "string" });
+            },
         },
 
         data() {
             return {
-                items: (this.value !== undefined) ? this.value : [],
+                items: (this.value !== undefined) ? Object.keys(this.value).map((item) => ({ key: item, value: this.value[item]})) : [],
+                label: "",
             };
+        },
+
+        mounted() {
+            this.label = this.title || decamel(this.field);
         },
 
         methods: {
             addItem() {
-                this.items.push(scaffold(this.schema)[0]);
+                this.items.push({});
             },
 
             removeItem(index) {
                 this.items.splice(index, 1);
 
-                this.$emit("input", this.items);
-                this.$emit("change", this.items);
+                this.assemble();
+            },
+
+            updateKey(value, index) {
+                if (!this.items.find((item) => item.key === value)) this.items[index].key = value;
+
+                this.assemble();
             },
 
             updateValue(value, index) {
-                this.items.splice(index, 1, value);
+                this.items[index].value = value;
+                this.assemble();
+            },
 
-                this.$emit("input", this.items);
-                this.$emit("change", this.items);
+            assemble() {
+                const working = {};
+
+                for (let i = 0; i < this.items.length; i += 1) {
+                    if (this.items[i].key && this.items[i].key !== "") working[this.items[i].key] = this.items[i].value;
+                }
+
+                this.$emit("input", prune(working));
+                this.$emit("change", prune(working));
             },
         },
     };
@@ -128,7 +165,7 @@
         flex-direction: row;
         align-items: flex-end;
         position: relative;
-        padding: 20px 10px 10px 30px;
+        padding: 20px 10px 20px 20px;
         margin: 10px 0 0 0;
     }
 

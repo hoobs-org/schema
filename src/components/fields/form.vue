@@ -19,7 +19,7 @@
 <template>
     <fieldset id="field">
         <div class="position">
-            <legend v-if="expandable || (label && label !== '')" class="legend" v-on:click="toggle">
+            <legend v-if="expandable || (label && label !== '')" :class="expanded ? 'legend' : 'legend colapsed'" v-on:click="toggle">
                 <span v-html="label"></span>
                 <div v-if="expandable && !expanded" class="icon">keyboard_arrow_down</div>
                 <div v-if="expandable && expanded" class="icon">keyboard_arrow_up</div>
@@ -43,7 +43,7 @@
         },
 
         props: {
-            field: String,
+            field: [String, Number],
             schema: Object,
             value: [Object, String, Number, Boolean, Array],
             title: String,
@@ -114,6 +114,10 @@
         align-items: center;
         white-space: nowrap;
         text-overflow: ellipsis;
+    }
+
+    #field .legend.colapsed {
+        margin: 0 0 20px 0;
     }
 
     #field .legend span {
