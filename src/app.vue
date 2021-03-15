@@ -49,15 +49,278 @@
 
         data() {
             return {
-                value: {},
+                value: {
+                    "platform": "Hue",
+                    "name": "Hue",
+                    "users": {
+                        "ECB5FAFFFE255032": "HLTz1fPjcyxa6tZe4jNAB6RkLU9a67UZuZie0jet"
+                    },
+                    "lights": true,
+                    "nativeHomeKitLights": false,
+                    "brightnessAdjustment": 100,
+                    "heartrate": 5,
+                    "lowBattery": 25,
+                    "timeout": 5,
+                    "waitTimePut": 50,
+                    "waitTimePutGroup": 1000,
+                    "waitTimeResend": 300,
+                    "waitTimeUpdate": 20
+                },
                 working: "",
                 error: null,
-                schema: {},
+                schema: {
+                    "name": "homebridge-hue",
+                    "alias": "Hue",
+                    "accessory": false,
+                    "platform": true,
+                    "singular": true,
+                    "config": {
+                        "type": "object",
+                        "properties": {
+                            "name": {
+                                "title": "Name",
+                                "description": "Plugin name as displayed in the homebridge log.",
+                                "type": "string",
+                                "required": true,
+                                "default": "Hue"
+                            },
+                            "anyOn": {
+                                "title": "Any On",
+                                "description": "Expose AnyOn characteristic.",
+                                "type": "boolean",
+                                "default": true
+                            },
+                            "brightnessAdjustment": {
+                                "title": "Brightness Adjustment",
+                                "description": "Adjustment factor for brightness for adaptive lighting.",
+                                "type": "integer",
+                                "default": 100,
+                                "placeholder": 100,
+                                "minimum": 10,
+                                "maximum": 100
+                            },
+                            "configuredName": {
+                                "title": "Configured Names",
+                                "description": "Expose Configured Name characteritic.",
+                                "default": false,
+                                "type": "boolean"
+                            },
+                            "effects": {
+                                "title": "Effects",
+                                "description": "Expose special effects (on supported lights) as separate services.",
+                                "type": "boolean",
+                                "default": true
+                            },
+                            "excludeSensorTypes": {
+                                "title": "Exclude Sensor Types",
+                                "description": "List of sensor types to exclude.",
+                                "type": "array",
+                                "items": {
+                                    "type": "string"
+                                }
+                            },
+                            "forceEveWeather": {
+                                "title": "Eve Weather",
+                                "description": "Create dummy pressure sensor for temperature/humidity sensors, so the Eve app treats them like an Eve Weather.",
+                                "default": false,
+                                "type": "boolean"
+                            },
+                            "forceHttp": {
+                                "title": "Use HTTP",
+                                "description": "Use plain http instead of https.",
+                                "default": true,
+                                "type": "boolean"
+                            },
+                            "groups": {
+                                "title": "Expose Groups",
+                                "default": false,
+                                "type": "boolean"
+                            },
+                            "group0": {
+                                "title": "Expose All Lights",
+                                "default": false,
+                                "type": "boolean"
+                            },
+                            "heartrate": {
+                                "title": "Polling Interval",
+                                "description": "Heartbeat interval in seconds.",
+                                "type": "integer",
+                                "placeholder": 5,
+                                "default": 5,
+                                "minimum": 1,
+                                "maximum": 30
+                            },
+                            "hosts": {
+                                "title": "Bridges/Gateways",
+                                "type": "array",
+                                "items": {
+                                    "type": "string"
+                                }
+                            },
+                            "hueDimmerRepeat": {
+                                "title": "Dimmer Repeat",
+                                "description": "Enable repeat mode for the Hue dimmer switch (Dim Up and Dim Down buttons) and the Hue smart button.",
+                                "type": "boolean"
+                            },
+                            "hueMotionTemperatureHistory": {
+                                "title": "Sensor History",
+                                "description": "Expose the temperature sensor of the Hue motion sensor as a separate HomeKit accessory, to enable temperature history in Eve.",
+                                "type": "boolean"
+                            },
+                            "lights": {
+                                "title": "Expose lights.",
+                                "default": true,
+                                "type": "boolean"
+                            },
+                            "linkButton": {
+                                "title": "Link Button",
+                                "description": "Expose the link button on the Hue bridge.",
+                                "default": false,
+                                "type": "boolean"
+                            },
+                            "lowBattery": {
+                                "title": "Low Battery",
+                                "description": "Threshold for low battery.",
+                                "type": "integer",
+                                "minimum": 0,
+                                "maximum": 100,
+                                "default": 25
+                            },
+                            "nativeHomeKitLights": {
+                                "title": "Hide HomeKit Lights",
+                                "description": "Don't expose lights already exposed by Hue.",
+                                "type": "boolean",
+                                "default": false
+                            },
+                            "nativeHomeKitSensors": {
+                                "title": "Hide HomeKit Sensors",
+                                "description": "Don't expose sensors already exposed Hue.",
+                                "type": "boolean",
+                                "default": true
+                            },
+                            "noResponse": {
+                                "title": "No Response",
+                                "description": "Report unreachable lights as <i>No Response</i> in HomeKit.",
+                                "type": "boolean"
+                            },
+                            "parallelRequests": {
+                                "title": "Parallel Requests",
+                                "description": "The number of ansynchronous requests homebridge-hue sends in parallel to a Hue bridge.",
+                                "type": "integer",
+                                "minimum": 1,
+                                "maximum": 30
+                            },
+                            "resource": {
+                                "title": "Resource",
+                                "description": "Expose a Resource characteristic.",
+                                "type": "boolean",
+                                "default": true
+                            },
+                            "rooms": {
+                                "title": "Rooms",
+                                "description": "Include Room groups.",
+                                "type": "boolean",
+                                "default": false
+                            },
+                            "rules": {
+                                "title": "Rules",
+                                "description": "Expose rules.",
+                                "type": "boolean",
+                                "default": false
+                            },
+                            "scenes": {
+                                "title": "Scenes",
+                                "description": "Expose scenes.",
+                                "type": "boolean",
+                                "default": false
+                            },
+                            "scenesAsSwitch": {
+                                "title": "Scene Switches",
+                                "description": "Expose scenes as Switch service.",
+                                "type": "boolean"
+                            },
+                            "schedules": {
+                                "title": "Schedules",
+                                "description": "Expose schedules.",
+                                "type": "boolean",
+                                "default": false
+                            },
+                            "sensors": {
+                                "title": "Sensors",
+                                "description": "Expose sensors.",
+                                "type": "boolean",
+                                "default": false
+                            },
+                            "stealth": {
+                                "title": "Local Only",
+                                "description": "Don't make any calls to the Internet.",
+                                "type": "boolean",
+                                "default": false
+                            },
+                            "timeout": {
+                                "title": "Timeout",
+                                "description": "The timeout in seconds to wait for a response from a Hue bridge.",
+                                "type": "integer",
+                                "minimum": 1,
+                                "maximum": 30,
+                                "default": 5
+                            },
+                            "users": {
+                                "type": "object",
+                                "patternProperties": {
+                                    "^[A-Z0-9]{16}$": {
+                                        "type": "string"
+                                    }
+                                },
+                                "minProperties": 1
+                            },
+                            "waitTimePut": {
+                                "title": "Request Timeout",
+                                "description": "The time, in milliseconds, to wait after sending a PUT request, before sending the next PUT request.",
+                                "type": "integer",
+                                "minimum": 0,
+                                "maximum": 50,
+                                "default": 50
+                            },
+                            "waitTimePutGroup": {
+                                "title": "Group Request Timeout",
+                                "description": "The time, in milliseconds, to wait after sending a PUT request to a group, before sending the next PUT request.",
+                                "type": "integer",
+                                "minimum": 0,
+                                "maximum": 1000,
+                                "default": 1000
+                            },
+                            "waitTimeResend": {
+                                "title": "Resend Timeout",
+                                "description": "The time, in milliseconds, to wait before resending a request after an ECONNRESET or http status 503 error.",
+                                "type": "integer",
+                                "minimum": 100,
+                                "maximum": 1000,
+                                "default": 300
+                            },
+                            "waitTimeUpdate": {
+                                "title": "Update Timeout",
+                                "description": "The time, in milliseconds, to wait for a change from HomeKit to another characteristic for the same light or group, before updating the Hue bridge.",
+                                "type": "integer",
+                                "minimum": 0,
+                                "maximum": 500,
+                                "default": 20
+                            },
+                            "wallSwitch": {
+                                "title": "Wall Switchs",
+                                "description": "Indicate that you use traditional wall switches to power off your lights.",
+                                "type": "boolean",
+                                "default": false
+                            }
+                        }
+                    }
+                },
             }
         },
 
         mounted() {
             this.working = JSON.stringify(this.schema, null, 4);
+            this.update();
         },
 
         methods: {

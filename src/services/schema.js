@@ -78,6 +78,9 @@ export function component(name) {
         case "field:form":
             return () => import(/* webpackChunkName: "field:form" */ "@/components/fields/form.vue");
 
+        case "field:keys":
+            return () => import(/* webpackChunkName: "field:form" */ "@/components/fields/keys.vue");
+
         case "field:textarea":
             return "textarea-field";
 
@@ -121,7 +124,8 @@ export function field(schema) {
     if (schema.type === "boolean") return component("field:checkbox");
     if (schema.type === "array" && schema.format === "root") return component("field:root");
     if (schema.type === "array") return schema.items.anyOf === undefined || !Array.isArray(schema.items.anyOf) ? component("field:list") : component("field:anyof");
-    if (schema.type === "object") return component("field:form");
+    if (schema.type === "object" && schema.properties) return component("field:form");
+    if (schema.type === "object" && schema.patternProperties) return component("field:keys");
 
     if (schema.type === "integer") return component("field:integer");
     if (schema.type === "number") return component("field:number");
